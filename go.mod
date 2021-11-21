@@ -12,4 +12,5 @@ require (
 	github.com/smartystreets/goconvey v1.7.2 // indirect
 	github.com/streadway/amqp v1.0.0
 	github.com/valyala/fasthttp v1.31.0 // indirect
+	golang.org/x/crypto v0.0.0-20210616213533-5ff15b29337e
 )

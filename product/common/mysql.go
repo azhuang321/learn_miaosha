@@ -3,6 +3,7 @@ package common
 import (
 	"database/sql"
 	_ "github.com/go-sql-driver/mysql"
+	"reflect"
 )
 
 //创建mysql 连接
@@ -26,7 +27,12 @@ func GetResultRow(rows *sql.Rows) map[string]string {
 		for i, v := range values {
 			if v != nil {
 				//fmt.Println(reflect.TypeOf(col))
-				record[columns[i]] = string(v.([]byte))
+
+				if reflect.ValueOf(v).Kind() == reflect.Int64 {
+					record[columns[i]] = string(v.(int64))
+				} else {
+					record[columns[i]] = string(v.([]byte))
+				}
 			}
 		}
 	}
