@@ -4,14 +4,14 @@ import (
 	"context"
 	"github.com/kataras/iris/v12"
 	"github.com/kataras/iris/v12/mvc"
-	"imooc-product/product/common"
-	"imooc-product/product/fronted/middleware"
-
 	"github.com/kataras/iris/v12/sessions"
+	"imooc-product/product/common"
 	"imooc-product/product/fronted/web/controllers"
 	"imooc-product/product/repositories"
 	"imooc-product/product/services"
 	"time"
+
+	"imooc-product/product/fronted/middleware"
 )
 
 func main() {
@@ -37,12 +37,13 @@ func main() {
 	if err != nil {
 
 	}
-	sess := sessions.New(sessions.Config{
-		Cookie:  "AdminCookie",
-		Expires: 600 * time.Minute,
-	})
 	ctx, cancel := context.WithCancel(context.Background())
 	defer cancel()
+
+	sess := sessions.New(sessions.Config{
+		Cookie:  "helloword",
+		Expires: 60 * time.Minute,
+	})
 
 	user := repositories.NewUserRepository("user", db)
 	userService := services.NewService(user)
@@ -58,7 +59,7 @@ func main() {
 	proProduct := app.Party("/product")
 	pro := mvc.New(proProduct)
 	proProduct.Use(middleware.AuthConProduct)
-	pro.Register(productService, orderService)
+	pro.Register(productService, orderService, sess.Start)
 	pro.Handle(new(controllers.ProductController))
 
 	app.Run(
