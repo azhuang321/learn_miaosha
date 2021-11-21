@@ -2,10 +2,9 @@ package repositories
 
 import (
 	"database/sql"
-	"strconv"
-
 	"imooc-product/product/common"
 	"imooc-product/product/datamodels"
+	"strconv"
 )
 
 type IOrderRepository interface {
@@ -46,11 +45,13 @@ func (o *OrderMangerRepository) Insert(order *datamodels.Order) (productID int64
 		return
 	}
 
-	sql := "INSERT " + o.table + " set userID=?,productID=?,orderStatus=?"
+	sql := "INSERT `order` SET userID=?,productID=?,orderStatus=?"
+
 	stmt, errStmt := o.mysqlConn.Prepare(sql)
 	if errStmt != nil {
 		return productID, errStmt
 	}
+
 	result, errResult := stmt.Exec(order.UserId, order.ProductId, order.OrderStatus)
 	if errResult != nil {
 		return productID, errResult
