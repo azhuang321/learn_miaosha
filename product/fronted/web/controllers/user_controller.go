@@ -8,6 +8,9 @@ import (
 	"imooc-product/product/services"
 	"imooc-product/product/tool"
 	"strconv"
+
+	"fmt"
+	"imooc-product/product/encrypt"
 )
 
 type UserController struct {
@@ -29,6 +32,7 @@ func (c *UserController) PostRegister() {
 		password = c.Ctx.FormValue("password")
 	)
 	//ozzo-validation
+
 	user := &datamodels.User{
 		UserName:     userName,
 		NickName:     nickName,
@@ -59,7 +63,6 @@ func (c *UserController) PostLogin() mvc.Response {
 	)
 	//2、验证账号密码正确
 	user, isOk := c.Service.IsPwdSuccess(userName, password)
-
 	if !isOk {
 		return mvc.Response{
 			Path: "/user/login",
@@ -68,7 +71,13 @@ func (c *UserController) PostLogin() mvc.Response {
 
 	//3、写入用户ID到cookie中
 	tool.GlobalCookie(c.Ctx, "uid", strconv.FormatInt(user.ID, 10))
-	c.Session.Set("userID", strconv.FormatInt(user.ID, 10))
+	uidByte := []byte(strconv.FormatInt(user.ID, 10))
+	uidString, err := encrypt.EnPwdCode(uidByte)
+	if err != nil {
+		fmt.Println(err)
+	}
+	//写入用户浏览器
+	tool.GlobalCookie(c.Ctx, "sign", uidString)
 
 	return mvc.Response{
 		Path: "/product/",
