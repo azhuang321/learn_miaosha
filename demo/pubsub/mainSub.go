@@ -1,6 +1,6 @@
 package main
 
-import "miaosha/demo"
+import "imooc-product/demo"
 
 func main() {
 	rabbitmq := demo.NewRabbitMQPubSub("" +

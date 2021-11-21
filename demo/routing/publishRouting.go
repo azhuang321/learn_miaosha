@@ -2,7 +2,7 @@ package main
 
 import (
 	"fmt"
-	"miaosha/demo"
+	"imooc-product/demo"
 	"strconv"
 	"time"
 )

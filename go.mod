@@ -1,4 +1,4 @@
-module miaosha
+module imooc-product
 
 go 1.16
 

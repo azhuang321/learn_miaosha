@@ -1,7 +1,7 @@
 package main
 
 import (
-	"miaosha/demo"
+	"imooc-product/demo"
 	"strconv"
 	"time"
 )
