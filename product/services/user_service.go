@@ -21,17 +21,17 @@ type UserService struct {
 }
 
 func (u *UserService) IsPwdSuccess(userName string, pwd string) (user *datamodels.User, isOk bool) {
+
 	user, err := u.UserRepository.Select(userName)
 
 	if err != nil {
 		return
 	}
-	isOk, err = ValidatePassword(pwd, user.HashPassword)
+	isOk, _ = ValidatePassword(pwd, user.HashPassword)
 
 	if !isOk {
 		return &datamodels.User{}, false
 	}
-
 	return
 }
 

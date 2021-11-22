@@ -7,6 +7,7 @@ import (
 	"imooc-product/product/common"
 	"imooc-product/product/fronted/middleware"
 	"imooc-product/product/fronted/web/controllers"
+	"imooc-product/product/rabbitmq"
 	"imooc-product/product/repositories"
 	"imooc-product/product/services"
 )
@@ -43,6 +44,8 @@ func main() {
 	userPro.Register(userService, ctx)
 	userPro.Handle(new(controllers.UserController))
 
+	rabbitmq := rabbitmq.NewRabbitMQSimple("imoocProduct")
+
 	//注册product控制器
 	product := repositories.NewProductManager("product", db)
 	productService := services.NewProductService(product)
@@ -51,7 +54,7 @@ func main() {
 	proProduct := app.Party("/product")
 	pro := mvc.New(proProduct)
 	proProduct.Use(middleware.AuthConProduct)
-	pro.Register(productService, orderService)
+	pro.Register(productService, orderService, rabbitmq)
 	pro.Handle(new(controllers.ProductController))
 
 	app.Run(
